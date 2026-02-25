@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisi Matematica — Lezioni 1 & 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>
+MathJax = {
+  tex: { inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags:['script','noscript','style','textarea'] },
+  startup: { typeset: true }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root {
+  --bg: #fafaf7;
+  --paper: #ffffff;
+  --grid: #c8d8e8;
+  --grid2: #e4eef6;
+  --ink: #1a1a2e;
+  --ink-dim: #4a5568;
+  --ink-light: #718096;
+  --rule: #b0c4d8;
+  --rule-strong: #7a9ab8;
+  --red: #c0392b;
+  --blue: #1a5276;
+  --green: #1a5c38;
+  --orange: #b7440a;
+  --purple: #5b3fa6;
+  --yellow-bg: #fff8c5;
+  --blue-bg: #e8f4fd;
+  --green-bg: #e8f8ee;
+  --red-bg: #fde8e8;
+  --serif: 'Playfair Display', Georgia, serif;
+  --body: 'Source Serif 4', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid2) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ---- NAV ---- */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index: 100;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  padding: 0 2.5rem;
+  height: 54px;
+  display: flex; align-items: center; gap: 2.5rem;
+  box-shadow: 0 2px 0 var(--rule);
+}
+.nav-brand {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--ink); letter-spacing: 0.12em;
+  text-transform: uppercase; white-space: nowrap; font-weight: 600;
+}
+.nav-links { display: flex; gap: 0.2rem; overflow-x: auto; scrollbar-width: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 0.7rem;
+  color: var(--ink-dim); text-decoration: none;
+  padding: 0.3rem 0.65rem; border-radius: 3px;
+  transition: all 0.15s; white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+.nav-links a:hover { background: var(--ink); color: var(--paper); }
+
+/* ---- HERO ---- */
+.hero {
+  padding: 100px 2.5rem 50px;
+  max-width: 860px; margin: 0 auto;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--ink-light); letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--rule-strong); }
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  line-height: 1.12; margin-bottom: 1.2rem;
+  color: var(--ink);
+}
+.hero h1 em { font-style: italic; color: var(--red); }
+.hero-sub { font-size: 1rem; color: var(--ink-dim); max-width: 600px; line-height: 1.65; margin-bottom: 2.5rem; font-weight: 300; }
+
+/* lesson badge */
+.lesson-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 620px; margin-bottom: 1.5rem; }
+@media(max-width:600px){ .lesson-cards { grid-template-columns: 1fr; } }
+.lesson-card {
+  border: 1.5px solid var(--rule-strong);
+  background: var(--paper);
+  border-radius: 4px; padding: 1rem 1.1rem;
+  font-size: 0.82rem;
+}
+.lesson-card .lc-num { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-light); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.lesson-card .lc-date { font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
+.lesson-card .lc-topic { color: var(--ink-dim); font-weight: 300; font-size: 0.85rem; }
+.lesson-card .lc-ore { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-light); margin-top: 0.4rem; }
+
+/* toc */
+.toc { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.toc a {
+  border: 1.5px solid var(--rule-strong);
+  background: var(--paper);
+  border-radius: 3px; padding: 0.4rem 0.8rem;
+  text-decoration: none; color: var(--ink-dim);
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.toc a:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ---- WRAPPER ---- */
+.wrapper { max-width: 860px; margin: 0 auto; padding: 0 2.5rem 6rem; }
+
+/* ---- CHAPTER ---- */
+.chapter { margin-top: 5rem; padding-top: 2.5rem; border-top: 2px solid var(--ink); }
+.chapter-meta {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--ink-light); letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.chapter-meta span { color: var(--red); }
+.chapter h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  line-height: 1.2; margin-bottom: 0.8rem;
+}
+.chapter-intro { color: var(--ink-dim); font-size: 0.95rem; max-width: 680px; margin-bottom: 2rem; font-weight: 300; }
+
+/* ---- DEFINITION BOX ---- */
+.def-box {
+  border-left: 3px solid var(--blue);
+  background: var(--blue-bg);
+  padding: 1rem 1.3rem; margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.def-box .def-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--blue); letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 600;
+}
+.def-box p { font-size: 0.93rem; color: var(--ink-dim); }
+
+.thm-box {
+  border-left: 3px solid var(--red);
+  background: var(--red-bg);
+  padding: 1rem 1.3rem; margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.thm-box .thm-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--red); letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 600;
+}
+
+.prop-box {
+  border-left: 3px solid var(--green);
+  background: var(--green-bg);
+  padding: 1rem 1.3rem; margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.prop-box .prop-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--green); letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 600;
+}
+
+/* ---- FORMULA CARD ---- */
+.formula-card {
+  border: 1.5px solid var(--rule-strong);
+  background: var(--paper);
+  border-radius: 6px; margin: 1.5rem 0;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 var(--rule);
+}
+.formula-card:hover { box-shadow: 4px 4px 0 var(--rule-strong); transform: translate(-1px,-1px); transition: all 0.15s; }
+.fc-head {
+  background: var(--yellow-bg);
+  border-bottom: 1.5px solid var(--rule);
+  padding: 0.6rem 1.1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.fc-title { font-family: var(--mono); font-size: 0.72rem; color: var(--orange); font-weight: 600; letter-spacing: 0.05em; }
+.fc-body { padding: 1rem 1.25rem; }
+.fc-math { padding: 0.6rem 1.25rem; text-align: center; font-size: 1.05rem; border-bottom: 1px solid var(--rule); }
+.fc-note { font-size: 0.85rem; color: var(--ink-dim); font-style: italic; margin-top: 0.6rem; font-weight: 300; }
+
+/* ---- EXERCISE ---- */
+.exercise {
+  border: 1.5px solid var(--rule-strong);
+  background: var(--paper);
+  border-radius: 6px; margin: 2rem 0;
+  overflow: hidden;
+}
+.ex-head {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.65rem 1.1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.ex-num { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.ex-title { font-family: var(--body); font-size: 0.88rem; font-style: italic; font-weight: 300; }
+.ex-body { padding: 1.1rem 1.25rem; }
+.ex-problem { font-size: 0.93rem; color: var(--ink); margin-bottom: 1rem; }
+.ex-solution-toggle {
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--blue); cursor: pointer;
+  border: 1px solid var(--blue);
+  background: none; padding: 0.35rem 0.8rem;
+  border-radius: 3px; margin-bottom: 0;
+  transition: all 0.15s;
+}
+.ex-solution-toggle:hover { background: var(--blue); color: var(--paper); }
+.ex-solution {
+  margin-top: 1rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 1rem;
+  display: none;
+}
+.ex-solution.open { display: block; }
+.ex-solution .sol-label {
+  font-family: var(--mono); font-size: 0.62rem;
+  color: var(--green); letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.ex-solution p { font-size: 0.9rem; color: var(--ink-dim); margin-bottom: 0.5rem; font-weight: 300; }
+.ex-solution .step { margin: 0.7rem 0; font-size: 0.9rem; }
+.ex-solution .step-label { font-family: var(--mono); font-size: 0.62rem; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.2rem; }
+.sol-final {
+  background: var(--green-bg);
+  border-left: 3px solid var(--green);
+  padding: 0.6rem 1rem; margin-top: 0.75rem;
+  border-radius: 0 3px 3px 0;
+  font-size: 0.9rem;
+}
+
+/* ---- TABLE ---- */
+.data-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.85rem; }
+.data-table th { background: var(--ink); color: var(--paper); padding: 0.55rem 0.85rem; text-align: left; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; }
+.data-table td { padding: 0.5rem 0.85rem; border-bottom: 1px solid var(--rule); }
+.data-table tr:nth-child(even) td { background: var(--yellow-bg); }
+
+/* ---- PROSE ---- */
+.prose { font-size: 0.95rem; color: var(--ink-dim); line-height: 1.75; margin: 0.75rem 0; font-weight: 300; }
+.prose strong { color: var(--ink); font-weight: 600; }
+
+/* ---- RULE ---- */
+hr.section-rule { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+/* ---- FOOTER ---- */
+footer {
+  border-top: 2px solid var(--ink);
+  padding: 1.5rem 2.5rem;
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--ink-light); letter-spacing: 0.08em;
+  max-width: 860px; margin: 0 auto;
+}
+
+/* ---- VIDEO ---- */
+.video-wrap {
+  position: relative; width: 100%; padding-bottom: 56.25%;
+  margin: 1.75rem 0;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 6px; overflow: hidden;
+  box-shadow: 3px 3px 0 var(--grid);
+}
+.video-wrap iframe {
+  position: absolute; top:0; left:0;
+  width: 100%; height: 100%; border: none;
+}
+.video-label {
+  font-family: var(--mono); font-size: 0.62rem;
+  color: var(--ink-light); letter-spacing: 0.14em;
+  text-transform: uppercase; margin-bottom: 0.4rem;
+}
+
+/* ---- FADE IN ---- */
+.fade-in { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+/* ---- NOTE ASIDE ---- */
+.aside-note {
+  float: right; width: 220px; margin: 0 0 1rem 1.5rem;
+  border: 1.5px solid var(--rule-strong);
+  background: var(--yellow-bg);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.8rem; color: var(--ink-dim);
+  border-radius: 4px;
+  font-style: italic; font-weight: 300;
+}
+.aside-note .note-label { font-family: var(--mono); font-size: 0.6rem; font-style: normal; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
+@media(max-width:680px){ .aside-note { float: none; width: 100%; margin: 1rem 0; } }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Analisi — L1/L2</span>
+  <div class="nav-links">
+    <a href="#trigonometria">Trigonometria</a>
+    <a href="#disequazioni">Disequazioni</a>
+    <a href="#logaritmi">Logaritmi</a>
+    <a href="#logdiseq">Diseq. Logaritmiche</a>
+    <a href="#estremi">Massimi &amp; Minimi</a>
+    <a href="#successioni">Successioni</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Didattica Erogativa &mdash; Lezioni 1 e 2</div>
+  <h1>Analisi<br><em>Matematica</em></h1>
+  <p class="hero-sub">Ripasso universitario di trigonometria, disequazioni, logaritmi, estremi di funzioni e prime proprietà delle successioni numeriche.</p>
+
+  <div class="lesson-cards">
+    <div class="lesson-card">
+      <div class="lc-num">Lezione n.&thinsp;1</div>
+      <div class="lc-date">24 / 02 / 2025</div>
+      <div class="lc-topic">Veloce ripasso su trigonometria e disequazioni</div>
+      <div class="lc-ore">Totale ore: 2:00 &nbsp;&mdash;&nbsp; Lezione</div>
+    </div>
+    <div class="lesson-card">
+      <div class="lc-num">Lezione n.&thinsp;2</div>
+      <div class="lc-date">25 / 02 / 2025</div>
+      <div class="lc-topic">Logaritmi, disequazioni logaritmiche, massimi/minimi, estremi, prime successioni</div>
+      <div class="lc-ore">Totale ore: 3:00 &nbsp;&mdash;&nbsp; Lezione</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <a href="#trigonometria">01 &mdash; Trigonometria</a>
+    <a href="#disequazioni">02 &mdash; Disequazioni</a>
+    <a href="#logaritmi">03 &mdash; Logaritmi</a>
+    <a href="#logdiseq">04 &mdash; Diseq. Logaritmiche</a>
+    <a href="#estremi">05 &mdash; Massimi &amp; Minimi</a>
+    <a href="#successioni">06 &mdash; Successioni</a>
+  </div>
+</div>
+
+<!-- WRAPPER -->
+<div class="wrapper">
+
+<!-- ============================================================ -->
+<!-- 01 TRIGONOMETRIA -->
+<!-- ============================================================ -->
+<div class="chapter fade-in" id="trigonometria">
+  <div class="chapter-meta">Lezione 1 &mdash; <span>Capitolo 01</span></div>
+  <h2>Trigonometria</h2>
+  <p class="chapter-intro">Le funzioni trigonometriche sono definite a partire dalla circonferenza unitaria. Nel contesto dell'analisi universitaria vengono usate come funzioni reali $f:\mathbb{R}\to\mathbb{R}$ e vanno padroneggiate a fondo.</p>
+
+  <div class="def-box">
+    <div class="def-label">Definizione &mdash; Circonferenza unitaria</div>
+    <p>La circonferenza unitaria è $\{(x,y)\in\mathbb{R}^2 : x^2+y^2=1\}$. Al numero reale $\theta$ associamo il punto $P=(\cos\theta,\sin\theta)$ ottenuto percorrendo un arco di lunghezza $|\theta|$ a partire da $(1,0)$.</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="fc-head"><span class="fc-title">Identità fondamentale</span></div>
+    <div class="fc-math">$$\sin^2\theta + \cos^2\theta = 1 \qquad \forall\,\theta\in\mathbb{R}$$</div>
+    <div class="fc-body"><p class="fc-note">Divide per $\cos^2\theta$: si ottiene $\tan^2\theta + 1 = \sec^2\theta$. Divide per $\sin^2\theta$: si ottiene $1 + \cot^2\theta = \csc^2\theta$.</p></div>
+  </div>
+
+  <div class="formula-card">
+    <div class="fc-head"><span class="fc-title">Formule di addizione</span></div>
+    <div class="fc-math">
+      $$\sin(\alpha\pm\beta)=\sin\alpha\cos\beta\pm\cos\alpha\sin\beta$$
+      $$\cos(\alpha\pm\beta)=\cos\alpha\cos\beta\mp\sin\alpha\sin\beta$$
+    </div>
+    <div class="fc-body"><p class="fc-note">Caso speciale $\alpha=\beta$: formule di duplicazione $\sin 2\alpha = 2\sin\alpha\cos\alpha$, $\cos 2\alpha = \cos^2\alpha - \sin^2\alpha = 1-2\sin^2\alpha = 2\cos^2\alpha-1$.</p></div>
+  </div>
+
+  <table class="data-table">
+    <tr><th>$\theta$</th><th>$\sin\theta$</th><th>$\cos\theta$</th><th>$\tan\theta$</th></tr>
+    <tr><td>$0$</td><td>$0$</td><td>$1$</td><td>$0$</td></tr>
+    <tr><td>$\pi/6$</td><td>$1/2$</td><td>$\sqrt{3}/2$</td><td>$1/\sqrt{3}$</td></tr>
+    <tr><td>$\pi/4$</td><td>$\sqrt{2}/2$</td><td>$\sqrt{2}/2$</td><td>$1$</td></tr>
+    <tr><td>$\pi/3$</td><td>$\sqrt{3}/2$</td><td>$1/2$</td><td>$\sqrt{3}$</td></tr>
+    <tr><td>$\pi/2$</td><td>$1$</td><td>$0$</td><td>$\nexists$</td></tr>
+    <tr><td>$\pi$</td><td>$0$</td><td>$-1$</td><td>$0$</td></tr>
+  </table>
+
+  <div class="thm-box">
+    <div class="thm-label">Proprieta di periodicita</div>
+    $\sin(\theta+2\pi)=\sin\theta$, $\quad\cos(\theta+2\pi)=\cos\theta$, $\quad\tan(\theta+\pi)=\tan\theta$.
+    <br>$\sin$ e $\cos$ sono <strong>continue</strong> su $\mathbb{R}$; $\tan$ e continua su ogni intervallo $\bigl(-\pi/2+k\pi,\,\pi/2+k\pi\bigr)$.
+  </div>
+
+  <div class="video-label">Approfondimento video</div>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/idIZE_VRBY8?si=6VVEUAxbAlU1kzgp" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <!-- ESERCIZIO 1 -->
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 1.1</span>
+      <span class="ex-title">Semplificazione di espressione trigonometrica</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Semplificare: $\displaystyle\frac{\sin^2\theta - \cos^2\theta}{\sin\theta + \cos\theta}$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Fattorizzazione</span>
+          Il numeratore e una differenza di quadrati: $\sin^2\theta - \cos^2\theta = (\sin\theta+\cos\theta)(\sin\theta-\cos\theta)$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Semplificazione</span>
+          $$\frac{(\sin\theta+\cos\theta)(\sin\theta-\cos\theta)}{\sin\theta+\cos\theta} = \sin\theta - \cos\theta$$
+          purche $\sin\theta+\cos\theta\neq 0$, cioe $\theta\neq -\pi/4+k\pi$.
+        </div>
+        <div class="sol-final">Risultato: $\;\sin\theta - \cos\theta$</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESERCIZIO 2 -->
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 1.2</span>
+      <span class="ex-title">Equazione trigonometrica</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere in $[0,2\pi)$: $\;2\sin^2\theta - \sin\theta - 1 = 0$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Sostituzione</span>
+          Poniamo $t = \sin\theta$. L'equazione diventa $2t^2 - t - 1 = 0$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Equazione di secondo grado</span>
+          $\Delta = 1 + 8 = 9$, quindi $t = \dfrac{1\pm 3}{4}$, da cui $t_1 = 1$ oppure $t_2 = -\dfrac{1}{2}$.
+        </div>
+        <div class="step"><span class="step-label">Passo 3 — Ritorno alla variabile $\theta$</span>
+          $\sin\theta = 1 \Rightarrow \theta = \pi/2$. <br>
+          $\sin\theta = -1/2 \Rightarrow \theta = 7\pi/6$ oppure $\theta = 11\pi/6$.
+        </div>
+        <div class="sol-final">Soluzioni: $\;\theta \in \Bigl\{\dfrac{\pi}{2},\;\dfrac{7\pi}{6},\;\dfrac{11\pi}{6}\Bigr\}$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 02 DISEQUAZIONI -->
+<!-- ============================================================ -->
+<div class="chapter fade-in" id="disequazioni">
+  <div class="chapter-meta">Lezione 1 &mdash; <span>Capitolo 02</span></div>
+  <h2>Disequazioni</h2>
+  <p class="chapter-intro">Una disequazione e una disuguaglianza che coinvolge un'incognita. Risolverla significa trovare l'insieme di tutti i valori reali che la soddisfano. Nel ripasso universitario si consolidano i casi algebrici, irrazionali e in modulo.</p>
+
+  <div class="def-box">
+    <div class="def-label">Valore assoluto</div>
+    <p>$|x| = \begin{cases} x & \text{se } x \ge 0 \\ -x & \text{se } x < 0 \end{cases}$. Equivalenze fondamentali: $|x|< a \;\Leftrightarrow\; -a < x < a$ &nbsp; e &nbsp; $|x|> a \;\Leftrightarrow\; x < -a \;\text{ o }\; x > a$ per $a > 0$.</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="fc-head"><span class="fc-title">Disequazioni irrazionali — schema</span></div>
+    <div class="fc-math">$$\sqrt{f(x)} > g(x) \;\Leftrightarrow\; \begin{cases} f(x)\ge 0 \\ g(x)<0 \end{cases} \;\cup\; \begin{cases} g(x)\ge 0 \\ f(x) > g(x)^2 \end{cases}$$</div>
+    <div class="fc-body"><p class="fc-note">Quando $g(x)<0$ la disuguaglianza e sempre soddisfatta nell'insieme di definizione di $\sqrt{f(x)}$.</p></div>
+  </div>
+
+  <div class="video-label">Approfondimento video</div>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/idIZE_VRBY8?si=6VVEUAxbAlU1kzgp" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 2.1</span>
+      <span class="ex-title">Disequazione di secondo grado</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere: $x^2 - 5x + 6 < 0$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Radici</span>
+          $x^2-5x+6 = (x-2)(x-3)$. Le radici sono $x=2$ e $x=3$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Studio del segno</span>
+          Il trinomio ha coefficiente positivo: e negativo tra le due radici.
+        </div>
+        <div class="sol-final">Soluzione: $\;x \in (2,\,3)$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 2.2</span>
+      <span class="ex-title">Disequazione in modulo</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere: $|2x - 3| \leq 5$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Equivalenza</span>
+          $|2x-3|\le 5 \;\Leftrightarrow\; -5\le 2x-3\le 5$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Sommo 3</span>
+          $-2 \le 2x \le 8 \;\Rightarrow\; -1 \le x \le 4$.
+        </div>
+        <div class="sol-final">Soluzione: $\;x \in [-1,\,4]$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 2.3</span>
+      <span class="ex-title">Disequazione irrazionale</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere: $\sqrt{x+3} > x - 1$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Dominio</span>
+          $x+3\ge 0 \Rightarrow x\ge -3$. Il dominio e $[-3,+\infty)$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Caso A: $x-1 < 0$, cioe $x < 1$</span>
+          La radice e $\ge 0$ e il membro destro e negativo: la disuguaglianza e sempre vera. Soluzione parziale: $-3\le x < 1$.
+        </div>
+        <div class="step"><span class="step-label">Passo 3 — Caso B: $x-1 \ge 0$, cioe $x\ge 1$</span>
+          Eleviamo al quadrato: $x+3 > (x-1)^2 = x^2-2x+1$. Quindi $x^2-3x-2 < 0$. Le radici sono $x=(3\pm\sqrt{17})/2$. Poiche $\sqrt{17}\approx 4.12$, si ha $x\approx -0.56$ e $x\approx 3.56$. Nel caso $x\ge 1$: $1\le x < (3+\sqrt{17})/2$.
+        </div>
+        <div class="step"><span class="step-label">Unione dei casi</span>
+          $[-3,1)\cup[1,(3+\sqrt{17})/2) = [-3,(3+\sqrt{17})/2)$.
+        </div>
+        <div class="sol-final">Soluzione: $\;x \in \Bigl[-3,\;\dfrac{3+\sqrt{17}}{2}\Bigr)$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 03 LOGARITMI -->
+<!-- ============================================================ -->
+<div class="chapter fade-in" id="logaritmi">
+  <div class="chapter-meta">Lezione 2 &mdash; <span>Capitolo 03</span></div>
+  <h2>Logaritmi</h2>
+  <p class="chapter-intro">Il logaritmo in base $a$ e l'inversa dell'esponenziale. Comprenderne le proprieta algebriche e il comportamento asintotico e fondamentale per lo studio di limiti, serie e integrali.</p>
+
+  <div class="def-box">
+    <div class="def-label">Definizione</div>
+    <p>Dati $a>0$, $a\neq 1$ e $x>0$, si definisce $\log_a x = y$ se e solo se $a^y = x$. Il dominio naturale di $\log_a$ e $(0,+\infty)$ e l'immagine e $\mathbb{R}$.</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="fc-head"><span class="fc-title">Proprieta dei logaritmi</span></div>
+    <div class="fc-math">
+      $$\log_a(xy) = \log_a x + \log_a y$$
+      $$\log_a\!\left(\frac{x}{y}\right) = \log_a x - \log_a y$$
+      $$\log_a(x^\alpha) = \alpha\log_a x \quad (\alpha\in\mathbb{R})$$
+      $$\log_a x = \frac{\ln x}{\ln a} \quad\text{(cambio di base)}$$
+    </div>
+    <div class="fc-body"><p class="fc-note">Caso speciale: $\log_a 1 = 0$ e $\log_a a = 1$ per ogni base $a>0$, $a\neq 1$.</p></div>
+  </div>
+
+  <div class="prop-box">
+    <div class="prop-label">Monotonia</div>
+    Se $a>1$: $\log_a$ e <strong>strettamente crescente</strong>. Se $0 < a < 1$: $\log_a$ e <strong>strettamente decrescente</strong>. In entrambi i casi la funzione e continua e biettiva su $(0,+\infty)$.
+  </div>
+
+  <div class="video-label">Approfondimento video</div>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/idIZE_VRBY8?si=6VVEUAxbAlU1kzgp" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 3.1</span>
+      <span class="ex-title">Calcolo di espressioni logaritmiche</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Calcolare: $\;\log_2 96 - \log_2 3$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Differenza di logaritmi</span>
+          $\log_2 96 - \log_2 3 = \log_2\!\dfrac{96}{3} = \log_2 32$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2</span>
+          $32 = 2^5$, quindi $\log_2 32 = 5$.
+        </div>
+        <div class="sol-final">Risultato: $5$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 3.2</span>
+      <span class="ex-title">Equazione logaritmica</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere: $\;\ln(x+1) + \ln(x-1) = \ln 3$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Dominio</span>
+          Condizioni di esistenza: $x+1>0$ e $x-1>0$, cioe $x>1$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Unione dei logaritmi</span>
+          $\ln[(x+1)(x-1)] = \ln 3 \;\Rightarrow\; x^2-1 = 3 \;\Rightarrow\; x^2 = 4$.
+        </div>
+        <div class="step"><span class="step-label">Passo 3 — Verifica</span>
+          $x=2$ (accettato, perche $2>1$) oppure $x=-2$ (rigettato, $-2\not>1$).
+        </div>
+        <div class="sol-final">Soluzione: $x = 2$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 04 DISEQUAZIONI LOGARITMICHE -->
+<!-- ============================================================ -->
+<div class="chapter fade-in" id="logdiseq">
+  <div class="chapter-meta">Lezione 2 &mdash; <span>Capitolo 04</span></div>
+  <h2>Disequazioni Logaritmiche</h2>
+  <p class="chapter-intro">Le disequazioni logaritmiche combinano lo studio del segno con la monotonia del logaritmo. L'attenzione al dominio e alla direzione della disuguaglianza (che si inverte se la base $0 < a < 1$) e cruciale.</p>
+
+  <div class="thm-box">
+    <div class="thm-label">Regola fondamentale</div>
+    $\log_a f(x) > \log_a g(x)$ e equivalente a:
+    $$\begin{cases} f(x) > 0 \\ g(x) > 0 \\ f(x) > g(x) \end{cases} \text{ se } a > 1 \qquad\qquad \begin{cases} f(x) > 0 \\ g(x) > 0 \\ f(x) < g(x) \end{cases} \text{ se } 0 < a < 1$$
+  </div>
+
+  <div class="video-label">Approfondimento video</div>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/idIZE_VRBY8?si=6VVEUAxbAlU1kzgp" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 4.1</span>
+      <span class="ex-title">Disequazione logaritmica semplice</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere: $\;\log_2(x-1) < 3$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Dominio</span>
+          $x-1 > 0 \Rightarrow x > 1$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Base $a=2>1$: crescente</span>
+          $\log_2(x-1) < \log_2 2^3 = \log_2 8 \;\Rightarrow\; x-1 < 8 \;\Rightarrow\; x < 9$.
+        </div>
+        <div class="sol-final">Soluzione: $\;x \in (1,\,9)$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 4.2</span>
+      <span class="ex-title">Disequazione logaritmica con base minore di 1</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Risolvere: $\;\log_{1/2}(2x+1) \ge -2$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Dominio</span>
+          $2x+1 > 0 \Rightarrow x > -1/2$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Base $a=1/2 < 1$: decrescente</span>
+          $\log_{1/2}(2x+1) \ge \log_{1/2}(1/2)^{-2} = \log_{1/2} 4$. Poiche la funzione e decrescente: $2x+1 \le 4 \;\Rightarrow\; x \le 3/2$.
+        </div>
+        <div class="step"><span class="step-label">Passo 3 — Intersezione con dominio</span>
+          $x > -1/2$ e $x \le 3/2$.
+        </div>
+        <div class="sol-final">Soluzione: $\;x \in \bigl(-\tfrac{1}{2},\,\tfrac{3}{2}\bigr]$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 05 MASSIMI, MINIMI, ESTREMI -->
+<!-- ============================================================ -->
+<div class="chapter fade-in" id="estremi">
+  <div class="chapter-meta">Lezione 2 &mdash; <span>Capitolo 05</span></div>
+  <h2>Massimi, Minimi ed Estremi</h2>
+  <p class="chapter-intro">Questi concetti si formulano rigorosamente su sottoinsiemi di $\mathbb{R}$. La distinzione tra massimo e estremo superiore, e fondamentale in analisi: un insieme puo avere l'estremo superiore senza avere il massimo.</p>
+
+  <div class="def-box">
+    <div class="def-label">Definizioni — Estremo superiore e inferiore</div>
+    <p>Sia $A\subseteq\mathbb{R}$, $A\neq\emptyset$.</p>
+    <p>Un numero $M\in\mathbb{R}$ e <strong>maggiorante</strong> di $A$ se $x\le M$ per ogni $x\in A$. Se $A$ e limitato superiormente, il suo <strong>estremo superiore</strong> $\sup A$ e il minimo dei maggioranti.</p>
+    <p>Analogamente, $m$ e <strong>minorante</strong> di $A$; $\inf A$ e il massimo dei minoranti.</p>
+    <p>Il <strong>massimo</strong> $\max A$ esiste se $\sup A \in A$; il <strong>minimo</strong> $\min A$ esiste se $\inf A \in A$.</p>
+  </div>
+
+  <div class="thm-box">
+    <div class="thm-label">Assioma di completezza di $\mathbb{R}$</div>
+    Ogni sottoinsieme non vuoto e limitato superiormente di $\mathbb{R}$ ha l'estremo superiore in $\mathbb{R}$. Questo distingue $\mathbb{R}$ da $\mathbb{Q}$: ad esempio $\{r\in\mathbb{Q}:r^2 < 2\}$ non ha $\sup$ razionale.
+  </div>
+
+  <div class="aside-note">
+    <span class="note-label">Nota bene</span>
+    $\sup A$ non deve appartenere ad $A$: ad esempio $A=(0,1)$ ha $\sup A = 1 \notin A$, quindi $\max A$ non esiste.
+  </div>
+
+  <div class="prop-box">
+    <div class="prop-label">Caratterizzazione dell'estremo superiore</div>
+    $s = \sup A$ se e solo se: (i) $s$ e un maggiorante di $A$; (ii) per ogni $\varepsilon>0$ esiste $x\in A$ con $x > s-\varepsilon$.
+  </div>
+
+  <div class="video-label">Approfondimento video</div>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/idIZE_VRBY8?si=6VVEUAxbAlU1kzgp" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 5.1</span>
+      <span class="ex-title">Calcolo di sup, inf, max, min</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Determinare $\sup A$, $\inf A$, $\max A$, $\min A$ (se esistono) per $A = \left\{\dfrac{n}{n+1} : n\in\mathbb{N}, n\ge 1\right\}$.</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Studio della successione</span>
+          $a_n = n/(n+1) = 1 - 1/(n+1)$ e crescente in $n$, con $a_n < 1$ per ogni $n\ge 1$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Inf e min</span>
+          Il valore minimo si raggiunge per $n=1$: $a_1 = 1/2 \in A$. Quindi $\min A = \inf A = 1/2$.
+        </div>
+        <div class="step"><span class="step-label">Passo 3 — Sup</span>
+          $a_n < 1$ per ogni $n$, quindi $1$ e maggiorante. Per ogni $\varepsilon>0$, scegliendo $n > 1/\varepsilon - 1$ si ottiene $a_n > 1-\varepsilon$. Dunque $\sup A = 1$.
+        </div>
+        <div class="step"><span class="step-label">Passo 4 — Max</span>
+          $1\notin A$ (non e della forma $n/(n+1)$), quindi $\max A$ non esiste.
+        </div>
+        <div class="sol-final">$\inf A = \min A = \tfrac{1}{2}$, $\;\sup A = 1$ (non e massimo)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 06 SUCCESSIONI NUMERICHE -->
+<!-- ============================================================ -->
+<div class="chapter fade-in" id="successioni">
+  <div class="chapter-meta">Lezione 2 &mdash; <span>Capitolo 06</span></div>
+  <h2>Successioni Numeriche</h2>
+  <p class="chapter-intro">Una successione e una funzione $a:\mathbb{N}\to\mathbb{R}$, scritta come $(a_n)_{n\in\mathbb{N}}$. Lo studio del comportamento asintotico, ossia del limite per $n\to+\infty$, e il cuore dell'analisi infinitesimale.</p>
+
+  <div class="def-box">
+    <div class="def-label">Definizione di limite</div>
+    <p>$(a_n) \to \ell \in \mathbb{R}$ per $n\to+\infty$ se $\;\forall\,\varepsilon > 0\;\;\exists\,N\in\mathbb{N}\;$ tale che $n > N \Rightarrow |a_n - \ell| < \varepsilon$.</p>
+    <p>$(a_n) \to +\infty$ se $\;\forall\,M>0\;\;\exists\,N\;$ tale che $n>N\Rightarrow a_n > M$.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="prop-label">Prime proprieta delle successioni</div>
+    <strong>Unicita del limite:</strong> se esiste, il limite e unico.<br>
+    <strong>Limitatezza:</strong> ogni successione convergente e limitata (il viceversa e falso: si pensi a $(-1)^n$).<br>
+    <strong>Monotonia + limitatezza $\Rightarrow$ convergenza</strong> (teorema fondamentale delle successioni monotone).
+  </div>
+
+  <div class="formula-card">
+    <div class="fc-head"><span class="fc-title">Limiti notevoli — successioni</span></div>
+    <div class="fc-math">
+      $$\lim_{n\to\infty}\frac{1}{n^\alpha} = 0 \quad (\alpha>0)\qquad\qquad \lim_{n\to\infty} n^\alpha = +\infty\quad(\alpha>0)$$
+      $$\lim_{n\to\infty} a^n = \begin{cases}0 & |a|<1 \\ 1 & a=1 \\ +\infty & a>1 \\ \nexists & a\le -1\end{cases}\qquad\qquad \lim_{n\to\infty}\left(1+\frac{1}{n}\right)^n = e$$
+    </div>
+    <div class="fc-body"><p class="fc-note">Il numero $e\approx 2.71828$ si definisce proprio come questo limite; e la base del logaritmo naturale $\ln$.</p></div>
+  </div>
+
+  <div class="thm-box">
+    <div class="thm-label">Teorema del confronto (sandwich)</div>
+    Se $a_n \le b_n \le c_n$ per $n$ abbastanza grande e $a_n\to\ell$ e $c_n\to\ell$, allora $b_n\to\ell$.
+  </div>
+
+  <div class="video-label">Approfondimento video</div>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube.com/embed/idIZE_VRBY8?si=6VVEUAxbAlU1kzgp" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 6.1</span>
+      <span class="ex-title">Limite di successione razionale</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Calcolare: $\displaystyle\lim_{n\to\infty}\frac{3n^2 - 5n + 1}{2n^2 + n - 7}$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Divide per $n^2$</span>
+          $$\frac{3 - 5/n + 1/n^2}{2 + 1/n - 7/n^2}$$
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Limite</span>
+          Per $n\to\infty$, $1/n\to 0$ e $1/n^2\to 0$. Il limite e $3/2$.
+        </div>
+        <div class="sol-final">Risultato: $\;3/2$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 6.2</span>
+      <span class="ex-title">Limite con teorema del confronto</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Calcolare: $\displaystyle\lim_{n\to\infty}\frac{\sin n}{n}$</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Stima</span>
+          $|\sin n|\le 1$ per ogni $n$, quindi $-\dfrac{1}{n}\le\dfrac{\sin n}{n}\le\dfrac{1}{n}$.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Confronto</span>
+          $1/n\to 0$ e $-1/n\to 0$. Per il teorema del confronto (sandwich): $\dfrac{\sin n}{n}\to 0$.
+        </div>
+        <div class="sol-final">Risultato: $\;0$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="ex-head">
+      <span class="ex-num">Esercizio 6.3</span>
+      <span class="ex-title">Successione monotona e limitata</span>
+    </div>
+    <div class="ex-body">
+      <p class="ex-problem">Dimostrare che $a_n = \dfrac{2n+1}{n+2}$ e crescente e limitata superiormente, e trovarne il limite.</p>
+      <button class="ex-solution-toggle" onclick="toggleSol(this)">Mostra soluzione</button>
+      <div class="ex-solution">
+        <div class="sol-label">Soluzione svolta</div>
+        <div class="step"><span class="step-label">Passo 1 — Monotonia</span>
+          $a_{n+1}-a_n = \dfrac{2(n+1)+1}{(n+1)+2} - \dfrac{2n+1}{n+2} = \dfrac{2n+3}{n+3}-\dfrac{2n+1}{n+2}$. Calcolo: numeratore $= (2n+3)(n+2)-(2n+1)(n+3) = 2n^2+7n+6 - 2n^2-7n-3 = 3 > 0$. Quindi $(a_n)$ e strettamente crescente.
+        </div>
+        <div class="step"><span class="step-label">Passo 2 — Limitatezza superiore</span>
+          $a_n = \dfrac{2n+1}{n+2} < \dfrac{2n+4}{n+2} = 2$ per ogni $n$. Dunque $2$ e un maggiorante.
+        </div>
+        <div class="step"><span class="step-label">Passo 3 — Limite</span>
+          Per il teorema fondamentale, $(a_n)$ converge. $\lim_{n\to\infty}\dfrac{2n+1}{n+2} = \lim_{n\to\infty}\dfrac{2+1/n}{1+2/n} = 2$.
+        </div>
+        <div class="sol-final">$(a_n)$ e crescente, limitata da $2$, e converge a $\ell = 2$.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- wrapper -->
+
+<footer>Analisi Matematica &mdash; Lezioni 1 &amp; 2 &mdash; 24–25 / 02 / 2025 &mdash; Formule via MathJax</footer>
+
+<script>
+function toggleSol(btn){
+  const sol = btn.nextElementSibling;
+  const open = sol.classList.toggle('open');
+  btn.textContent = open ? 'Nascondi soluzione' : 'Mostra soluzione';
+}
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.05});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
